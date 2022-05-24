@@ -4,5 +4,6 @@
 !*.mod
 !go.sum
 !README.md
+!LICENSE
 
 !*/
