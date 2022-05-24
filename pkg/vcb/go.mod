@@ -1,3 +1,3 @@
-module github.com/paperdev-code/vcbtool/pkg/vcb
+module vcb
 
 go 1.18

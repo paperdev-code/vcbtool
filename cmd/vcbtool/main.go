@@ -1,5 +1,7 @@
 package main
 
+import "vcb"
+
 func main() {
-	greet()
+	vcb.Greet()
 }

@@ -1,7 +1,7 @@
-module jorn.software/vcbtool
+module vcbtool
 
 go 1.18
 
-require (
-  github.com/paperdev-code/vcbtool/pkg/vcb v1.0
-)
+require vcb v0.0.0
+
+replace vcb v0.0.0 => ./pkg/vcb

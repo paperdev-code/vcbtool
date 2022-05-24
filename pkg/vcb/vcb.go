@@ -1,9 +1,8 @@
 package vcb
 
-import (
-	"fmt"
-)
+import "fmt"
 
-func greet() {
+// Greet is a function that greets the user.
+func Greet() {
 	fmt.Println("Let's go!")
 }
