@@ -9,6 +9,7 @@ A Go terminal application and set of packages for generating blueprints for the 
  * [ ] Parse base64 encoded blueprints (decoration)
  * [x] Display blueprints in VCBTool (sorta..?)
  * [ ] Convert circuit into logic graph
+ * [ ] Bindings for C/C++ or directly for CPython
 
 ### Licenses
 VCB Tool makes use of Charm's [Bubble Tea](https://github.com/charmbracelet/bubbletea) TUI framework licensed under the [MIT license](https://github.com/charmbracelet/bubbletea/blob/master/LICENSE)

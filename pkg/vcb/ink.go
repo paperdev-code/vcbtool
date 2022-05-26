@@ -6,6 +6,7 @@ import (
 	"fmt"
 )
 
+// Basic RGBA struct for creating and parsing pixels
 type RGBA = struct {
 	R uint8
 	G uint8
@@ -17,26 +18,9 @@ type RGBA = struct {
 type Ink int8
 
 // Ink enum
+// The order, for better or worse, may never be changed for compatibility
 const (
 	INK_NONE Ink = iota
-
-	INK_WRITE
-	INK_CROSS
-	INK_READ
-	INK_BUFFER
-	INK_AND
-	INK_OR
-	INK_XOR
-	INK_NOT
-	INK_NAND
-	INK_NOR
-	INK_XNOR
-	INK_LATCH_ON
-	INK_LATCH_OFF
-	INK_CLOCK
-	INK_LED
-	INK_ANNOTATION
-	INK_FILLER
 
 	INK_TC_GRAY
 	INK_TC_WHITE
@@ -55,6 +39,26 @@ const (
 	INK_TC_VIOLET
 	INK_TC_PINK
 
+	INK_CROSS
+	INK_FILLER
+	INK_ANNOTATION
+
+	INK_BUFFER
+	INK_AND
+	INK_OR
+	INK_XOR
+	INK_NOT
+	INK_NAND
+	INK_NOR
+	INK_XNOR
+
+	INK_WRITE
+	INK_READ
+	INK_LATCH_ON
+	INK_LATCH_OFF
+	INK_CLOCK
+	INK_LED
+
 	_INK_MAX int = iota
 )
 
@@ -62,24 +66,6 @@ const (
 // Ordered exactly like the ink enum
 var InkColors = [...]RGBA{
 	{0, 0, 0, 0}, // INK_NONE
-
-	{77, 56, 62, 255},    // INK_WRITE
-	{102, 120, 142, 255}, // INK_CROSS
-	{46, 71, 93, 255},    // INK_READ
-	{146, 255, 99, 255},  // INK_BUFFER
-	{255, 198, 99, 255},  // INK_AND
-	{99, 242, 255, 255},  // INK_OR
-	{174, 116, 255, 255}, // INK_XOR
-	{255, 98, 138, 255},  // INK_NOT
-	{255, 162, 0, 255},   // INK_NAND
-	{48, 217, 255, 255},  // INK_NOR
-	{166, 0, 255, 255},   // INK_XNOR
-	{99, 255, 159, 255},  // INK_LATCH_ON
-	{56, 77, 71, 255},    // INK_LATCH_OFF
-	{255, 0, 65, 255},    // INK_CLOCK
-	{255, 255, 255, 255}, // INK_LED
-	{58, 69, 81, 255},    // INK_ANNOTATION
-	{140, 171, 161, 255}, // INK_FILLER
 
 	{42, 53, 65, 255},    // INK_TC_GRAY
 	{159, 168, 174, 255}, // INK_TC_WHITE
@@ -97,6 +83,26 @@ var InkColors = [...]RGBA{
 	{102, 86, 161, 255},  // INK_TC_PURPLE
 	{135, 86, 161, 255},  // INK_TC_VIOLET
 	{161, 85, 151, 255},  // INK_TC_PINK
+
+	{102, 120, 142, 255}, // INK_CROSS
+	{140, 171, 161, 255}, // INK_FILLER
+	{58, 69, 81, 255},    // INK_ANNOTATION
+
+	{146, 255, 99, 255},  // INK_BUFFER
+	{255, 198, 99, 255},  // INK_AND
+	{99, 242, 255, 255},  // INK_OR
+	{174, 116, 255, 255}, // INK_XOR
+	{255, 98, 138, 255},  // INK_NOT
+	{255, 162, 0, 255},   // INK_NAND
+	{48, 217, 255, 255},  // INK_NOR
+	{166, 0, 255, 255},   // INK_XNOR
+
+	{77, 56, 62, 255},    // INK_WRITE
+	{46, 71, 93, 255},    // INK_READ
+	{99, 255, 159, 255},  // INK_LATCH_ON
+	{56, 77, 71, 255},    // INK_LATCH_OFF
+	{255, 0, 65, 255},    // INK_CLOCK
+	{255, 255, 255, 255}, // INK_LED
 }
 
 // Set Ink value for a given RGBA
@@ -106,11 +112,19 @@ func RGBAToInk(rgba RGBA) (Ink, error) {
 			return Ink(i), nil
 		}
 	}
-	return Ink(0), fmt.Errorf("no ink found for rgba(%v)", rgba)
+	return Ink(0), fmt.Errorf("no ink found for rgba '%v'", rgba)
+}
+
+// Set RGBA for a given ink
+func InkToRGBA(ink Ink) (RGBA, error) {
+	if int(ink) >= _INK_MAX {
+		return RGBA{0, 0, 0, 0}, fmt.Errorf("no RGBA for ink '%v'", ink)
+	}
+	return InkColors[int(ink)], nil
 }
 
 // Parses an image to an Ink Array
-func ParseImageToInkArray(data []uint8, width int32, height int32) ([]Ink, error) {
+func ParseRGBAToInk(data []uint8, width int32, height int32) ([]Ink, error) {
 	inks := make([]Ink, width*height)
 
 	if len(data) != int(width*height*4) {
@@ -122,11 +136,28 @@ func ParseImageToInkArray(data []uint8, width int32, height int32) ([]Ink, error
 
 		ink, err := RGBAToInk(rgba)
 		if err != nil {
-			return []Ink{}, fmt.Errorf("failed to convert color value (%v)", err)
+			return []Ink{}, fmt.Errorf("failed to convert color value; %v", err)
 		}
-
 		inks[j] = ink
 	}
 
 	return inks, nil
+}
+
+func ParseInkToRGBA(inks []Ink, width int32, height int32) ([]uint8, error) {
+	data := make([]uint8, width*height*4)
+
+	if len(inks) != int(width*height) {
+		return []uint8{}, fmt.Errorf("inks size does not match given dimensions")
+	}
+
+	for i, j := 0, 0; i < len(inks); i, j = i+1, i+4 {
+		rgba, err := InkToRGBA(inks[i])
+		if err != nil {
+			return []uint8{}, fmt.Errorf("failed to convert ink value; %v", err)
+		}
+		data[j+0], data[j+1], data[j+2], data[j+3] = rgba.R, rgba.G, rgba.B, rgba.A
+	}
+
+	return data, nil
 }

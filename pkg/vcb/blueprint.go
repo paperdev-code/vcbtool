@@ -30,15 +30,6 @@ type Blueprint struct {
 	}
 }
 
-// A data structure containing the layers
-type Circuit struct {
-	Width       int32
-	Height      int32
-	Logic_layer []Ink
-	//TODO add support for decorative layers
-	//deco_layer []uint8
-}
-
 // Creates a blueprint from a base64 encoded string
 func NewBlueprintFromBase64(b64 string) (Blueprint, error) {
 	blueprint := Blueprint{}
@@ -46,54 +37,51 @@ func NewBlueprintFromBase64(b64 string) (Blueprint, error) {
 	input := strings.NewReader(b64)
 	decoded, err := io.ReadAll(base64.NewDecoder(base64.StdEncoding, input))
 	if err != nil {
-		return Blueprint{}, fmt.Errorf("failed to decode and read base64 blueprint. (%v)", err)
+		return Blueprint{}, fmt.Errorf("failed to decode and read base64 blueprint; %v", err)
 	}
 
 	footer_size := binary.Size(blueprint.Footer)
 	binary.Read(bytes.NewReader(decoded[len(decoded)-footer_size:]), binary.LittleEndian, &blueprint.Footer)
 
+	if blueprint.Footer.Layer != 65536 {
+		return Blueprint{}, fmt.Errorf("blueprint should be logic '65536' type, is '%d'", blueprint.Footer.Layer)
+	}
+
 	zstd_reader, err := zstd.NewReader(nil)
 	if err != nil {
-		return Blueprint{}, fmt.Errorf("reader fail (%v)", err)
+		return Blueprint{}, fmt.Errorf("reader fail; %v", err)
 	}
 
 	decompressed, err := zstd_reader.DecodeAll(decoded[:len(decoded)-footer_size], nil)
 	if err != nil {
-		return Blueprint{}, fmt.Errorf("failed to decompress blueprint layer. (%v)", err)
+		return Blueprint{}, fmt.Errorf("failed to decompress blueprint layer; %v", err)
 	}
-	/*
-		decompressed, err := zstd.Decompress(nil, decoded[:len(decoded)-footer_size])
-		if err != nil {
-			return Blueprint{}, fmt.Errorf("failed to decompress blueprint layer. (%v)", err)
-		}
-	*/
 	blueprint.Data = decompressed
 
 	return blueprint, nil
 }
 
-// Creates a circuit from a blueprint
-func NewCircuitFromBlueprint(blueprint Blueprint) (Circuit, error) {
-	circuit := Circuit{
-		Width:  blueprint.Footer.Width,
-		Height: blueprint.Footer.Height,
-	}
-
-	logic_layer, err := ParseImageToInkArray(
-		blueprint.Data,
-		circuit.Width,
-		circuit.Height,
-	)
-	if err != nil {
-		return Circuit{}, fmt.Errorf("failed to parse logic layer (%v)", err)
-	}
-	circuit.Logic_layer = logic_layer
-
-	return circuit, nil
-}
-
+// Reverse operation that builds an image from a circuit
 func NewBlueprintFromCircuit(circuit Circuit) (Blueprint, error) {
 	blueprint := Blueprint{}
 
+	blueprint.Footer.HeightType = 2
+	blueprint.Footer.WidthType = 2
+	blueprint.Footer.LayerType = 2
+
+	blueprint.Footer.Width = circuit.Width
+	blueprint.Footer.Height = circuit.Height
+	blueprint.Footer.Layer = 0
+	data, err := ParseInkToRGBA(circuit.Layer, circuit.Width, circuit.Height)
+	if err != nil {
+		return Blueprint{}, fmt.Errorf("failed to create blueprint from circuit; %v", err)
+	}
+
+	blueprint.Data = data
 	return blueprint, nil
+}
+
+func Base64FromBlueprint(blueprint Blueprint) (string, error) {
+	b64 := ""
+	return b64, nil
 }

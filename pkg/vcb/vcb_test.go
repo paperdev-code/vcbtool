@@ -18,7 +18,7 @@ var TEST_LOGIC_LAYER = []Ink{
 func TestCircuitFromBase64(t *testing.T) {
 	bp, err := NewBlueprintFromBase64(TEST_BLUEPRINT)
 	if err != nil {
-		t.Fatalf("NewBlueprintFromBase64() failure (%v)", err)
+		t.Fatalf("NewBlueprintFromBase64() failure; %v", err)
 	}
 
 	// Check whether footer parsed correctly.
@@ -44,16 +44,16 @@ func TestCircuitFromBase64(t *testing.T) {
 
 	cc, err := NewCircuitFromBlueprint(bp)
 	if err != nil {
-		t.Fatalf("NewCircuitFromBlueprint() failure (%v)", err)
+		t.Fatalf("NewCircuitFromBlueprint() failure; %v", err)
 	}
 
 	// Check whether all ink was converted properly
 	{
 		x := int(0)
 		y := int(0)
-		for i := 0; i < len(cc.Logic_layer); i += 1 {
+		for i := 0; i < len(cc.Layer); i += 1 {
 			correct_ink := TEST_LOGIC_LAYER[i]
-			circuit_ink := cc.Logic_layer[i]
+			circuit_ink := cc.Layer[i]
 			if i%int(cc.Width) == 0 && i != 0 {
 				y += 1
 			}
@@ -61,7 +61,7 @@ func TestCircuitFromBase64(t *testing.T) {
 			if x == int(cc.Width) {
 				x = 0
 			}
-			if cc.Logic_layer[i] != TEST_LOGIC_LAYER[i] {
+			if cc.Layer[i] != TEST_LOGIC_LAYER[i] {
 				t.Fatalf("Ink @ (%d, %d) is %d, should be %d",
 					x,
 					y,
@@ -70,5 +70,16 @@ func TestCircuitFromBase64(t *testing.T) {
 				)
 			}
 		}
+	}
+
+	// Reconstruct blueprint from circuit
+	rbp, err := NewBlueprintFromCircuit(cc)
+	if err != nil {
+		t.Fatalf("NewBlueprintFromCircuit() failure; %v", err)
+	}
+
+	//
+	{
+		_ = rbp
 	}
 }

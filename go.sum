@@ -1,5 +1,3 @@
-github.com/DataDog/zstd v1.5.2 h1:vUG4lAyuPCXO0TLbXvPv7EB7cNK1QV/luu55UHLrrn8=
-github.com/DataDog/zstd v1.5.2/go.mod h1:g4AWEaM3yOg3HYfnJ3YIawPnVdXJh9QME85blwSAmyw=
 github.com/charmbracelet/bubbletea v0.20.0 h1:/b8LEPgCbNr7WWZ2LuE/BV1/r4t5PyYJtDb+J3vpwxc=
 github.com/charmbracelet/bubbletea v0.20.0/go.mod h1:zpkze1Rioo4rJELjRyGlm9T2YNou1Fm4LIJQSa5QMEM=
 github.com/containerd/console v1.0.3 h1:lIr7SlA5PxZyMV30bDW0MGbiOPXwc63yRuCP0ARubLw=

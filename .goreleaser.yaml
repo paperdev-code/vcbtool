@@ -2,7 +2,6 @@ before:
   hooks:
     - go mod tidy
     - go test ./pkg/vcb
-    - go test ./pkg/vcbfmt
 
 builds:
   -
