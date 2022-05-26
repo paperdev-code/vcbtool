@@ -10,7 +10,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/DataDog/zstd"
+	"github.com/klauspost/compress/zstd"
 )
 
 // Blueprints are images encoded as base64
@@ -52,10 +52,21 @@ func NewBlueprintFromBase64(b64 string) (Blueprint, error) {
 	footer_size := binary.Size(blueprint.Footer)
 	binary.Read(bytes.NewReader(decoded[len(decoded)-footer_size:]), binary.LittleEndian, &blueprint.Footer)
 
-	decompressed, err := zstd.Decompress(nil, decoded[:len(decoded)-footer_size])
+	zstd_reader, err := zstd.NewReader(nil)
+	if err != nil {
+		return Blueprint{}, fmt.Errorf("reader fail (%v)", err)
+	}
+
+	decompressed, err := zstd_reader.DecodeAll(decoded[:len(decoded)-footer_size], nil)
 	if err != nil {
 		return Blueprint{}, fmt.Errorf("failed to decompress blueprint layer. (%v)", err)
 	}
+	/*
+		decompressed, err := zstd.Decompress(nil, decoded[:len(decoded)-footer_size])
+		if err != nil {
+			return Blueprint{}, fmt.Errorf("failed to decompress blueprint layer. (%v)", err)
+		}
+	*/
 	blueprint.Data = decompressed
 
 	return blueprint, nil
