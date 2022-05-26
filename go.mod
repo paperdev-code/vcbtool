@@ -3,8 +3,8 @@ module github.com/paperdev-code/vcbtool
 go 1.18
 
 require (
+	github.com/klauspost/compress v1.15.4
 	github.com/charmbracelet/bubbletea v0.20.0
-	github.com/DataDog/zstd v1.5.2
 )
 
 require (
