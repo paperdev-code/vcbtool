@@ -99,21 +99,13 @@ var InkColorMap = [...]RGBA{
 	{161, 85, 151, 255},  // INK_TC_PINK
 }
 
-//
-func sliceToRGBA(data []uint8) (RGBA, error) {
-	if len(data) != 4 {
-		return RGBA{0, 0, 0, 0}, fmt.Errorf("slice must have a length of 4")
-	}
-	return RGBA{data[0], data[1], data[2], data[3]}, nil
-}
-
+// Set Ink value for a given RGBA
 func RGBAToInk(rgba RGBA) (Ink, error) {
 	for i := 0; i < _INK_MAX; i++ {
 		if rgba == InkColorMap[i] {
 			return Ink(i), nil
 		}
 	}
-
 	return Ink(0), fmt.Errorf("no ink found for rgba(%v)", rgba)
 }
 
