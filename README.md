@@ -2,8 +2,7 @@
 A Go terminal application and set of packages for generating blueprints for the game [Virtual Circuit Board](https://www.virtualcircuitboard.com)
 
 ### Packages
-* **vcb** : Virtual Circuit Board core library
-* **vcbfmt** : Formatting library for VCB blueprints  
+* **vcb** : Virtual Circuit Board core library 
 
 ### Todo
  * [x] Parse base64 encoded blueprints (logic)
