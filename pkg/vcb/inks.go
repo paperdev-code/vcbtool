@@ -7,10 +7,10 @@ import (
 )
 
 type RGBA = struct {
-	r uint8
-	g uint8
-	b uint8
-	a uint8
+	R uint8
+	G uint8
+	B uint8
+	A uint8
 }
 
 // Ink is any of the possible usable logical inks
@@ -60,7 +60,7 @@ const (
 
 // RGBA colors for each Ink
 // Ordered exactly like the ink enum
-var InkColorMap = [...]RGBA{
+var InkColors = [...]RGBA{
 	{0, 0, 0, 0}, // INK_NONE
 
 	{77, 56, 62, 255},    // INK_WRITE
@@ -102,7 +102,7 @@ var InkColorMap = [...]RGBA{
 // Set Ink value for a given RGBA
 func RGBAToInk(rgba RGBA) (Ink, error) {
 	for i := 0; i < _INK_MAX; i++ {
-		if rgba == InkColorMap[i] {
+		if rgba == InkColors[i] {
 			return Ink(i), nil
 		}
 	}
