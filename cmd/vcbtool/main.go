@@ -3,48 +3,29 @@ package main
 import (
 	"fmt"
 	"log"
-	"time"
-	"vcb"
+	"os"
 
-	tea "github.com/charmbracelet/bubbletea"
+	_ "github.com/charmbracelet/bubbletea"
+	"github.com/paperdev-code/vcbtool/pkg/vcb"
 )
 
 func main() {
-	vcb.Greet()
-
-	p := tea.NewProgram(model(5))
-	if err := p.Start(); err != nil {
-		log.Fatal(err)
+	bp, err := vcb.NewBlueprintFromBase64(os.Args[1])
+	if err != nil {
+		log.Fatalf("Error parsing blueprint (%v)", err)
 	}
-}
 
-type model int
+	cc, err := vcb.NewCircuitFromBlueprint(bp)
+	if err != nil {
+		log.Fatalf("Error parsing logic layer (%v)", err)
+	}
 
-func (m model) Init() tea.Cmd {
-	return tick
-}
-
-func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	switch msg.(type) {
-	case tea.KeyMsg:
-		return m, tea.Quit
-	case tickMsg:
-		m -= 1
-		if m <= 0 {
-			return m, tea.Quit
+	fmt.Print("Circuit:")
+	for i := 0; i < len(cc.Logic_layer); i += 1 {
+		if i%int(cc.Height) == 0 {
+			fmt.Print("\n")
 		}
-		return m, tick
+		fmt.Printf("[%.2d]", cc.Logic_layer[i])
 	}
-	return m, nil
-}
-
-func (m model) View() string {
-	return fmt.Sprintf("This program exists in %d seconds. Press any key to exit.", m)
-}
-
-type tickMsg time.Time
-
-func tick() tea.Msg {
-	time.Sleep(time.Second)
-	return tickMsg{}
+	fmt.Print("\n")
 }

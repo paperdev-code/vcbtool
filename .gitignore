@@ -5,5 +5,8 @@
 !go.sum
 !README.md
 !LICENSE
+!.goreleaser.yaml
 
 !*/
+
+dist/

@@ -1,5 +1,14 @@
 # Virtual Circuit Board Tool
-A Go application and set of packages for generating blueprints for the game [Virtual Circuit Board](https://www.virtualcircuitboard.com)
+A Go terminal application and set of packages for generating blueprints for the game [Virtual Circuit Board](https://www.virtualcircuitboard.com)
+
+### Packages
+* **vcb** : Virtual Circuit Board core library
+* **vcbfmt** : Formatting library for VCB blueprints  
+
+### Todo
+ * [x] Parse base64 encoded blueprints (logic)
+ * [ ] Parse base64 encoded blueprints (decoration)
+ * [ ] Display blueprints in VCBTool
 
 ### Licenses
 VCB Tool makes use of Charm's [Bubble Tea](https://github.com/charmbracelet/bubbletea) TUI framework licensed under the [MIT license](https://github.com/charmbracelet/bubbletea/blob/master/LICENSE)

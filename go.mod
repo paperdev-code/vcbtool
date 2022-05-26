@@ -1,10 +1,11 @@
-module vcbtool
+module github.com/paperdev-code/vcbtool
 
 go 1.18
 
-require vcb v0.0.0
-
-require github.com/charmbracelet/bubbletea v0.20.0
+require (
+	github.com/charmbracelet/bubbletea v0.20.0
+	github.com/DataDog/zstd v1.5.2
+)
 
 require (
 	github.com/containerd/console v1.0.3 // indirect
@@ -18,5 +19,3 @@ require (
 	golang.org/x/sys v0.0.0-20210630005230-0f9fa26af87c // indirect
 	golang.org/x/term v0.0.0-20210422114643-f5beecf764ed // indirect
 )
-
-replace vcb v0.0.0 => ./pkg/vcb
