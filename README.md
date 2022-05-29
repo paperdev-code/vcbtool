@@ -1,6 +1,10 @@
 # Virtual Circuit Board Tool
 A Go terminal application and set of packages for generating blueprints for the game [Virtual Circuit Board](https://www.virtualcircuitboard.com)
 
+### Programs
+* **vcbtool** : A Logic Blueprint Visualizer
+* **vcbmandelbrot** : A mandelbrot to blueprint renderer
+
 ### Packages
 * **vcb** : Virtual Circuit Board core library 
 
