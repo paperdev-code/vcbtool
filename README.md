@@ -6,7 +6,7 @@ A Go terminal application and set of packages for generating blueprints for the 
 * **vcbmandelbrot** : A mandelbrot to blueprint renderer
 
 ### Packages
-* **vcb** : Virtual Circuit Board core library 
+* **vcb** : Virtual Circuit Board core library [![Go Reference](https://pkg.go.dev/badge/github.com/paperdev-code/vcbtool/pkg/vcb.svg)](https://pkg.go.dev/github.com/paperdev-code/vcbtool/pkg/vcb)
 
 ### Todo
  * [x] Parse base64 encoded blueprints (logic)
